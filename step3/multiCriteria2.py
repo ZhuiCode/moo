@@ -8,6 +8,9 @@ from pymoo.operators.mutation.pm import PM
 from pymoo.operators.sampling.rnd import FloatRandomSampling
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
+from pymoo.mcdm.pseudo_weights import PseudoWeights
+from pymoo.decomposition.asf import ASF
+
 
 class MyProblem(ElementwiseProblem):
     def __init__(self):
@@ -42,6 +45,9 @@ res = minimize(problem,
                seed=1,
                save_history=True,
                verbose=True)
+decomp = ASF()
+weights = np.array([0.2, 0.8])
+i = PseudoWeights(weights).do(nF)
 X = res.X
 F = res.F
 fl = F.min(axis=0)
