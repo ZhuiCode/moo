@@ -44,13 +44,17 @@ res = minimize(problem,
                seed=1,
                save_history=True,
                verbose=True)
-
-weights = np.array([0.2, 0.8])
-i = PseudoWeights(weights).do(nF)
 X = res.X
 F = res.F
 fl = F.min(axis=0)
 fu = F.max(axis=0)
+approx_ideal = F.min(axis=0)
+approx_nadir = F.max(axis=0)
+weights = np.array([0.2, 0.8])
+nF = (F - approx_ideal) / (approx_nadir - approx_ideal)
+i = PseudoWeights(weights).do(nF)
+
+
 print(f"Scale f1: [{fl[0]}, {fu[0]}]")
 print(f"Scale f2: [{fl[1]}, {fu[1]}]")
 xl, xu = problem.bounds()
