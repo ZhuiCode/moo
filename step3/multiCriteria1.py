@@ -46,13 +46,21 @@ res = minimize(problem,
                verbose=True)
 X = res.X
 F = res.F
+#F.min(axis=0)函数返回F矩阵每列的最小值，F.max(axis=0)函数返回F矩阵每列的最大值，approx_ideal和approx_nadir分别表示近似理想点和近似nadir点
+#axis=0表示按列计算最小值和最大值，得到的结果是一个包含每列最小值和最大值的一维数组
 fl = F.min(axis=0)
 fu = F.max(axis=0)
+
 approx_ideal = F.min(axis=0)
 approx_nadir = F.max(axis=0)
+#np.array函数将列表转换为numpy数组，weights表示权重向量，
 weights = np.array([0.2, 0.8])
+#PseudoWeights(weights).do(nF)函数根据权重向量计算伪权重，nF表示归一化后的目标函数值矩阵
 nF = (F - approx_ideal) / (approx_nadir - approx_ideal)
+#PseudoWeights(weights).do(nF)函数根据权重向量计算伪权重，nF表示归一化后的目标函数值矩阵
+#伪权重的作用是将多目标优化问题转化为单目标优化问题，通过加权求和的方式将多个目标函数合并成一个目标函数，从而简化优化过程
 i = PseudoWeights(weights).do(nF)
+
 
 
 print(f"Scale f1: [{fl[0]}, {fu[0]}]")

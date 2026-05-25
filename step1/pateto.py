@@ -17,4 +17,3 @@ plt.ylabel("$f_2$", fontsize=14)
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.10),fancybox=True, shadow=False)
 plt.tight_layout()
 plt.savefig("pateto.png", dpi=300, bbox_inches='tight')
-
