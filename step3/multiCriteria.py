@@ -9,7 +9,6 @@ from pymoo.operators.sampling.rnd import FloatRandomSampling
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
 from pymoo.mcdm.pseudo_weights import PseudoWeights
-from pymoo.decomposition.asf import ASF
 
 
 class MyProblem(ElementwiseProblem):
@@ -47,18 +46,16 @@ res = minimize(problem,
                verbose=True)
 X = res.X
 F = res.F
-#权重F1和F2分别为0.2和0.8，表示在优化过程中F2比F1更重要，因此在计算伪权重时，F2的权重更大，从而更好地反映出F2的重要性
-weights = np.array([0.2, 0.8])
+#approx_ideal和approx_nadir分别表示近似理想点和近似nadir点，近似理想点是指在目标空间中所有目标函数值的最小值组成的点，近似nadir点是指在目标空间中所有目标函数值的最大值组成的点
 approx_ideal = F.min(axis=0)
 approx_nadir = F.max(axis=0)
-nF = (F - approx_ideal) / (approx_nadir - approx_ideal)
-#ASF（Achievement Scalarizing Function）是一种常用的多目标优化问题
-#的分解方法，它通过引入一个参考点和一个权重向量，将多目标优化问题转化为单目标优化问题，从而简化优化过程
-decomp = ASF()
-i = decomp(nF, 1/weights).argmin()
+
 
 plt.figure(figsize=(7, 5))
 plt.scatter(F[:, 0], F[:, 1], s=30, facecolors='none', edgecolors='blue')
-plt.scatter(F[i, 0], F[i, 1], marker="x", color="red", s=200)
-plt.title("Design Space")
-plt.savefig("design_space1.png", dpi=300)
+plt.scatter(approx_ideal[0], approx_ideal[1], facecolors='none', edgecolors='red', marker="*", s=100, label="Ideal Point (Approx)")
+plt.scatter(approx_nadir[0], approx_nadir[1], facecolors='none', edgecolors='black', marker="p", s=100, label="Nadir Point (Approx)")
+plt.title("Objective Space")
+plt.legend()
+
+plt.savefig("design_space.png", dpi=300)

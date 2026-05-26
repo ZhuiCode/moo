@@ -9,7 +9,6 @@ from pymoo.operators.sampling.rnd import FloatRandomSampling
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
 from pymoo.mcdm.pseudo_weights import PseudoWeights
-from pymoo.decomposition.asf import ASF
 
 
 class MyProblem(ElementwiseProblem):
@@ -47,20 +46,18 @@ res = minimize(problem,
                verbose=True)
 X = res.X
 F = res.F
-decomp = ASF()
-
-weights = np.array([0.2, 0.8])
-
 approx_ideal = F.min(axis=0)
 approx_nadir = F.max(axis=0)
+
+weights = np.array([0.2, 0.8])
+#nF是指将目标函数值进行归一化处理后的结果，归一化的目的是为了消除不同目标函数之间的量纲
+#差异，使得它们在优化过程中具有相同的权重，从而更好地反映出各个目标函数的重要性
 nF = (F - approx_ideal) / (approx_nadir - approx_ideal)
+#伪权重的作用是将多目标优化问题转化为单目标优化问题，通过加权求和的方
+# 式将多个目标函数合并成一个目标函数，从而简化优化过程
 i = PseudoWeights(weights).do(nF)
-fl = F.min(axis=0)
-fu = F.max(axis=0)
-print(f"Scale f1: [{fl[0]}, {fu[0]}]")
-print(f"Scale f2: [{fl[1]}, {fu[1]}]")
-xl, xu = problem.bounds()
+
 plt.figure(figsize=(7, 5))
 plt.scatter(F[:, 0], F[:, 1], s=30, facecolors='none', edgecolors='blue')
 plt.title("Design Space")
-plt.savefig("design_space.png", dpi=300)
+plt.savefig("design_space2.png", dpi=300)
