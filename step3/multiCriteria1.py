@@ -8,7 +8,6 @@ from pymoo.operators.mutation.pm import PM
 from pymoo.operators.sampling.rnd import FloatRandomSampling
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
-from pymoo.mcdm.pseudo_weights import PseudoWeights
 from pymoo.decomposition.asf import ASF
 
 
@@ -53,8 +52,10 @@ approx_ideal = F.min(axis=0)
 approx_nadir = F.max(axis=0)
 nF = (F - approx_ideal) / (approx_nadir - approx_ideal)
 #ASF（Achievement Scalarizing Function）是一种常用的多目标优化问题
-#的分解方法，它通过引入一个参考点和一个权重向量，将多目标优化问题转化为单目标优化问题，从而简化优化过程
+#的分解方法，它通过引入一个参考点和一个权重向量，将多目标优化问题转化
+#为单目标优化问题，从而简化优化过程
 decomp = ASF()
+
 i = decomp(nF, 1/weights).argmin()
 
 plt.figure(figsize=(7, 5))

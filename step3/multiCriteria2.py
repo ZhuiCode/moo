@@ -57,7 +57,11 @@ nF = (F - approx_ideal) / (approx_nadir - approx_ideal)
 # 式将多个目标函数合并成一个目标函数，从而简化优化过程
 i = PseudoWeights(weights).do(nF)
 
+
 plt.figure(figsize=(7, 5))
 plt.scatter(F[:, 0], F[:, 1], s=30, facecolors='none', edgecolors='blue')
+plt.scatter(F[i, 0], F[i, 1], marker="x", color="red", s=200)
+
+
 plt.title("Design Space")
 plt.savefig("design_space2.png", dpi=300)
